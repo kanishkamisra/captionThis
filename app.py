@@ -1,8 +1,6 @@
 import os
 
-from flask import Flask, send_file, render_template, request, redirect
-from flask import send_from_directory
-from flask import url_for
+from flask import Flask, send_file, render_template, request
 from werkzeug.utils import secure_filename
 from clarifai.rest import ClarifaiApp
 
@@ -29,31 +27,8 @@ def upload_file():
         filename = secure_filename(f.filename)
         print filename
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # return render_template('display.html')
-        # return redirect(url_for('uploaded_file',
-        #                         filename=filename))
-        filename = 'http://0.0.0.0:5000/static/' + filename
-        print filename
-    return render_template('display.html', filename=filename)
-        # return render_template('display.html')
+        return render_template('display.html', image_name=filename)
 
-
-# @app.route('/show')
-# def uploaded_file(filename):
-#     filename = 'http://0.0.0.0:5000/static/' + filename
-#     print filename
-#     return render_template('display.html', filename=filename)
-
-
-# @app.route('/static/<filename>')
-# def send_file(filename):
-#     return send_from_directory(UPLOAD_FOLDER, filename)
-
-
-# @app.route('/<filename>')
-# def uploaded_file(filename):
-#     # return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-#     return render_template('display.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
