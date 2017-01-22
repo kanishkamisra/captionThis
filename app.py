@@ -40,7 +40,7 @@ def upload_file():
 
         # Predict the uploaded image using Clarifai
         test_image = ClImage(
-            file_obj=open('/Users/vishnutadimeti/Developer/Python/captionThis/static/' + filename, 'rb'))
+            file_obj=open(UPLOAD_FOLDER + filename, 'rb'))
         print model.predict([test_image])
 
         # Return the template display.html to render, and the filename of the image saved
