@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div class="card" style="width: 20rem;">
+  <img class="card-img-top" src="{{ url_for('uploaded_file', filename=filename) }}" alt="Card image cap">
+        <!--<img class="card-img-top" src="{{ filename }}" alt="Card image cap">-->
+        <!--<img class="card-img-top" src="http://0.0.0.0:5000/static/p.png" alt="Card image cap">-->
+        <!--<img class="card-img-top" src="{{ send_from_directory(app.config['UPLOAD_FOLDER'], filename) }}" alt="Card image cap">-->
+  <div class="card-block">
+    <h4 class="card-title">Card title</h4>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+</div>
+</body>
+</html>
