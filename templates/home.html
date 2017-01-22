@@ -3,18 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Caption This</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
 </head>
+
+<style>
+    .container  {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+    }
+    .container .row {
+        margin: 0 auto;
+    }
+</style>
+
 <body>
+<<<<<<< HEAD
 <br><br>
 <div class="container">
 <form action = "http://127.0.0.1:5000/display" method = "POST" enctype = "multipart/form-data">
     <input type = "file" name = "file" />
     <input type = "submit"/>
 </form>
+=======
+
+<div class="container" id="result">
+    <div class="row valign-wrapper">
+        <div class="col s6 offset-s3 valign">
+            <div class="card">
+                <div class="card-image">
+                    <img src="{{url_for('static', filename='place.png')}}">
+                </div>
+                <div class="card-content">
+                    <p>Upload a photo, let us find you a good caption and hashtags</p>
+                </div>
+                <div class="card-action">
+                    <form action="http://0.0.0.0:5000/display" method = "POST" enctype = "multipart/form-data">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>File</span>
+                                <input type="file" name="file">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                            <div class="btn">
+                                <span>Submit</span>
+                                <input type="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+>>>>>>> ac547cdfb6412eebf4f1bb5450d6ff4df661819a
 </div>
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+<!--<form action = "http://0.0.0.0:5000/display" method = "POST" enctype = "multipart/form-data">-->
+    <!--<input type = "file" name = "file" />-->
+    <!--<input type = "submit"/>-->
+<!--</form>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 </body>
 </html>
