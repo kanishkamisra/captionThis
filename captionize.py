@@ -34,7 +34,7 @@ def urlize(tags):
 	# Returns urls as list
 
 	urls = []
-	for tag in tags[:10]:
+	for tag in tags:
 		urls.append("https://favqs.com/api/quotes/?filter=" + tag)
 
 	return urls
@@ -45,11 +45,12 @@ def get_quotes(urls):
     quotes = pd.DataFrame({'Quote': [], 'Author': []})
     for url in urls:
         req = requests.get(url, headers = headers).json()
-        time.sleep(0.5)
+        time.sleep(0.2)
         print "Processing: " + url
         for item in req['quotes']:
             if item['body'] != 'No quotes found':
-                quotes = quotes.append(pd.DataFrame({'Quote': [item['body']], 'Author': [item['author']]}))
+                # quotes = quotes.append(pd.DataFrame({'Quote': [item['body']], 'Author': [item['author']]}))
+                quotes = quotes.append(pd.DataFrame({'Quote': [item['body']]}))
     return quotes.reset_index(drop=True)
 
 def similarity_matrix(dataframe):
@@ -59,7 +60,7 @@ def similarity_matrix(dataframe):
     return pd.DataFrame(cosine_similarities)
 
 def best_similarities(dataframe):
-    return dataframe[len(dataframe)-1].sort_values(ascending=False)[1:7].reset_index()
+    return dataframe[len(dataframe)-1].sort_values(ascending=False)[1:2].reset_index()
 
 def candidate_indexes(dataframe):
 	return dataframe['index']
@@ -78,11 +79,13 @@ def captionize(img):
     # print "phrased"
     urls = urlize(tags)
     # print "urllized"
-    quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote'], 'Author': get_quotes(urls)['Author']})
-    phrases = quotes.append(pd.DataFrame({'Quote' : [tag_phrase], 'Author': ['No One']})).reset_index(drop=True)
+    # quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote'], 'Author': get_quotes(urls)['Author']})
+    quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote']})
+    # phrases = quotes.append(pd.DataFrame({'Quote' : [tag_phrase], 'Author': ['No One']})).reset_index(drop=True)
+    phrases = quotes.append(pd.DataFrame({'Quote' : [tag_phrase]})).reset_index(drop=True)
     matrix = similarity_matrix(phrases['Quote'])
     best = best_similarities(matrix)
-    captions =candidate_captions(phrases['Quote'] + ' - ' + phrases['Author'], candidate_indexes(best_similarities(matrix)))
+    captions =candidate_captions(phrases['Quote'], candidate_indexes(best_similarities(matrix)))
     # print "Get ready...\n"
     return captions
 
@@ -91,8 +94,8 @@ def captionize(img):
 def hashtagger(img):
 	tags = clarifaize(img)
 	alltags = []
-	for tag in tags[:7]:
+	for tag in tags[:6]:
 		alltags.append("#"+tag)
 	return alltags
 
-# print(captionize('lake.jpg'))
+# print(captionize('lake2.jpg'))

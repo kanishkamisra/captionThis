@@ -1,10 +1,10 @@
 import os
-
+from twython import Twython
 from flask import Flask, render_template, request
 from flask import send_from_directory
 from werkzeug.utils import secure_filename
 from clarifai.rest import ClarifaiApp, Image as ClImage
-from captionize import captionize
+from captionize import captionize, hashtagger
 
 # Initialize ClarifaiAPI
 app = ClarifaiApp("wLADJynVIqVNlpuUhS45MHkBoQ4C4RYrHqlOrLhI", "L23m2pfhwOjamIX0GCfOimH3JHDQcCx23HMnk4eR")
@@ -19,6 +19,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'C:/Users/Kanishka/captionThis/static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+twitter = Twython("mcBrpMgySLjb866aTA4Sr3EbC",
+                  "BB0o45dYYKSIQOyK5UyiMVUOKukXdKoN6ko2htRuROam44pbTX",
+                  "215693554-gZg3b3I5NBIRfHkcq8O9om75RlIrP5ZAn3O2DuE9",
+                  "mDxlFjvno3A1aKsYfOyA8sG0cTehYEMMSuq2MFnsbXeGX")
 
 @app.route("/")
 def index():
@@ -49,14 +53,34 @@ def upload_file():
         captions = []
         for caption in captionize(UPLOAD_FOLDER + '/' + filename):
             captions.append(caption)
+        # captions = captionize(UPLOAD_FOLDER + '/' + filename)
+        hashtags = " ".join(hashtagger(UPLOAD_FOLDER + '/' + filename))
+            # hashtags.append(hashtag)
+        # everything = pd.DataFrame({'caption': [captions], 'hashtags': [hashtags]})
+        # everything = everything.append(pd.DataFrame({'caption': captions, 'hashtags': hashtags}))
 
         # Return the template display.html to render, and the filename of the image saved
-        return render_template('display.html', image_name=filename, captionlist = captions)
+        return render_template('display.html', image_name=filename, captionphrase = captions, hashtagphrase = hashtags)
 
 
-@app.route('/display/<filename>')
+@app.route('/display/<filename>', methods=['GET', 'POST'])
 def send_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+    # if (request.method == 'POST'):
+        photo = open(UPLOAD_FOLDER + "/" + filename, 'rb')
+        response = twitter.upload_media(media=photo)
+        # captions = []
+        # for caption in captionize(UPLOAD_FOLDER + '/' + filename):
+        #     captions.append(caption)
+        # captions = captionize(UPLOAD_FOLDER + '/' + filename)
+        captions = []
+        for caption in captionize(UPLOAD_FOLDER + '/' + filename):
+            captions.append(caption)
+        hashtags = " ".join(hashtagger(UPLOAD_FOLDER + '/' + filename))
+        print("".join(captions) + "\n" + hashtags)
+        twitter.update_status(status="".join(captions) + "\n" + hashtags, media_ids=[response['media_id']])
+        return render_template('home.html')
+    # if(request.method == 'GET'):
+
 
 
 if __name__ == "__main__":
