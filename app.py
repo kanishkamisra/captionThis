@@ -46,11 +46,12 @@ def upload_file():
         # print model.predict([test_image])
         # filename = 'lake.jpg'
         # print(captionize(UPLOAD_FOLDER + '/' + filename))
+        captions = []
         for caption in captionize(UPLOAD_FOLDER + '/' + filename):
-            print(caption)
+            captions.append(caption)
 
         # Return the template display.html to render, and the filename of the image saved
-        return render_template('display.html', image_name=filename)
+        return render_template('display.html', image_name=filename, captionlist = captions)
 
 
 @app.route('/display/<filename>')

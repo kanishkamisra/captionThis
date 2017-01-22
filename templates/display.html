@@ -23,7 +23,7 @@
 </style>
 
 <body>
-
+{% for item in captionlist %}
     <div class="container" id="result">
         <div class="row valign-wrapper">
             <div class="col s6 offset-s3 valign">
@@ -33,8 +33,9 @@
                         <span class="card-title">Card Title</span>
                     </div>
                     <div class="card-content">
-                        <p>I am a very simple card. I am good at containing small bits of information.
-                            I am convenient because I require little markup to use effectively.</p>
+                        <!-- <p>I am a very simple card. I am good at containing small bits of information.
+                            I am convenient because I require little markup to use effectively.</p> -->
+                        <p>{{item}}</p>
                     </div>
                     <div class="card-action">
                         <a href="#">This is a link</a>
@@ -43,6 +44,7 @@
             </div>
         </div>
     </div>
+    {% endfor %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 </body>
