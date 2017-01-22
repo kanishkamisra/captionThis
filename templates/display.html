@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Display</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style_display.css') }}">
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <style>
@@ -23,29 +24,33 @@
 </style>
 
 <body>
-{% for item in captionlist %}
+<!--<button class="btn waves-effect waves-light" type="submit" name="action">-->
+    <!--Submit<i class="material-icons right">send</i>-->
+  <!--</button>-->
+
+<br><br><br>
+<center><button class="btn waves-effect waves-light white"><a href="http://127.0.0.1:5000/" role = "button"><i class="material-icons">home</i></a></button></center>
     <div class="container" id="result">
         <div class="row valign-wrapper">
-            <div class="col s6 offset-s3 valign">
-                <div class="card">
+            <!--{% for item in captionlist %}-->
+            <div class="col s6 off-set-s3 valign">
+                <div class="card large">
                     <div class="card-image">
                         <img src="{{url_for('static', filename=image_name)}}">
-                        <span class="card-title">Card Title</span>
                     </div>
                     <div class="card-content">
-                        <!-- <p>I am a very simple card. I am good at containing small bits of information.
-                            I am convenient because I require little markup to use effectively.</p> -->
                         <p>{{item}}</p>
                     </div>
                     <div class="card-action">
-                        <a href="#">This is a link</a>
+                        <form action = "http://127.0.0.1:5000/display/{{image_name}}" method = "POST" enctype = "multipart/form-data">
+                            <center><button class="btn waves-effect waves-light blue">Tweet</button></center>
+                        </form>
                     </div>
                 </div>
             </div>
+            <!--{% endfor %}-->
         </div>
     </div>
-    {% endfor %}
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 </body>
 </html>
