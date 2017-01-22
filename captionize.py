@@ -1,9 +1,10 @@
 import requests
 import pandas as pd
 from clarifai import rest
-from clarifai.rest import ClarifaiApp
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from clarifai.rest import ClarifaiApp, Image as ClImage
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+import time
 
 def clarifaize(img):
     app = ClarifaiApp("mrKZLVJBD6mWwmzTg_84YsbDlZRj1yQPIlBlfQZd", "vuuKXEtODxS8RHNo-a0wfF4vMJr4pVojR-mEScL3")
@@ -33,13 +34,12 @@ def urlize(tags):
 	# Returns urls as list
 
 	urls = []
-	for tag in tags:
+	for tag in tags[:10]:
 		urls.append("https://favqs.com/api/quotes/?filter=" + tag)
 
 	return urls
 
 headers = {'Authorization' : 'Token token="b09904a4d885299ee386f5cbbf795c56"'}
-req = requests.get("https://favqs.com/api/quotes/?filter=mountain", headers = headers)
 
 def get_quotes(urls):
     quotes = pd.DataFrame({'Quote': [], 'Author': []})
@@ -73,17 +73,17 @@ def candidate_captions(dataframe, indexes):
 
 def captionize(img):
     tags = clarifaize(img)
-    print "clarifized"
+    # print "clarifized"
     tag_phrase = tagPhrase(tags)
-    print "phrased"
+    # print "phrased"
     urls = urlize(tags)
-    print "urllized"
-    quotes = quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote'], 'Author': get_quotes(urls)['Author']})
+    # print "urllized"
+    quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote'], 'Author': get_quotes(urls)['Author']})
     phrases = quotes.append(pd.DataFrame({'Quote' : [tag_phrase], 'Author': ['No One']})).reset_index(drop=True)
     matrix = similarity_matrix(phrases['Quote'])
     best = best_similarities(matrix)
     captions =candidate_captions(phrases['Quote'] + ' - ' + phrases['Author'], candidate_indexes(best_similarities(matrix)))
-    print "Get ready...\n"
+    # print "Get ready...\n"
     return captions
 
 	# return captions
@@ -94,3 +94,5 @@ def hashtagger(img):
 	for tag in tags[:7]:
 		alltags.append("#"+tag)
 	return alltags
+
+# print(captionize('lake.jpg'))
