@@ -6,19 +6,19 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
 def clarifaize(img):
-	# returns tags sorted by probability as list
-
     app = ClarifaiApp("mrKZLVJBD6mWwmzTg_84YsbDlZRj1yQPIlBlfQZd", "vuuKXEtODxS8RHNo-a0wfF4vMJr4pVojR-mEScL3")
     # get the general model
     model = app.models.get("general-v1.3")
     # predict with the model
-    # prediction = model.predict_by_url(url=img)['outputs'][0]['data']['concepts']
-    prediction = model.predict_by_filename(img)['outputs'][0]['data']['concepts']
+#     prediction = model.predict_by_url(url=img)['outputs'][0]['data']['concepts']
+#     prediction = model.predict_by_filename(img)['outputs'][0]['data']['concepts']
+    test_image = ClImage(file_obj=open(img, 'rb'))
+    prediction = model.predict([test_image])['outputs'][0]['data']['concepts']
     tags = pd.DataFrame({'Tag': [], 'Probability': []})
     for item in prediction:
         tags = tags.append(pd.DataFrame({'Tag': [item['name']], 'Probability': [item['value']]}))
 #     return tags.reset_index(drop=True)
-    tags = list(tagDataset['Tag'])
+    tags = list(tags['Tag'])
     if('no person' in tags):
         tags.remove('no person')
     
@@ -72,17 +72,21 @@ def candidate_captions(dataframe, indexes):
 
 
 def captionize(img):
+    tags = clarifaize(img)
+    print "clarifized"
+    tag_phrase = tagPhrase(tags)
+    print "phrased"
+    urls = urlize(tags)
+    print "urllized"
+    quotes = quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote'], 'Author': get_quotes(urls)['Author']})
+    phrases = quotes.append(pd.DataFrame({'Quote' : [tag_phrase], 'Author': ['No One']})).reset_index(drop=True)
+    matrix = similarity_matrix(phrases['Quote'])
+    best = best_similarities(matrix)
+    captions =candidate_captions(phrases['Quote'] + ' - ' + phrases['Author'], candidate_indexes(best_similarities(matrix)))
+    print "Get ready...\n"
+    return captions
 
-	tags = clarifaize(img)
-	tagPhrase = tagPhrase(tags)
-	urls = urlize(tags)
-	quotes = quotes = pd.DataFrame({'Quote': get_quotes(urls)['Quote'], 'Author': get_quotes(urls)['Author']})
-	phrases = quotes.append(pd.DataFrame({'Quote' : [tagPhrase], 'Author': ['No One']})).reset_index(drop=True)
-	matrix = similarity_matrix(phrases['Quote'])
-	best = best_similarities(matrix)
-	captions =candidate_captions(phrases['Quote'] + ' - ' + phrases['Author'], candidate_indexes(best_similarities(matrix)))
-
-	return captions
+	# return captions
 
 def hashtagger(img):
 	tags = clarifaize(img)
